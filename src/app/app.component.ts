@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { GithubClientService } from 'services/github-client.service';
+import { Repository } from 'src/models/Repository';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit {
   pageIndex = 1;
  isLoading:boolean=false;
   title = 'Trending Repo';
-  repos:any = {items:[]};
+  repos:Repository = new Repository();
   constructor(private _ghService:GithubClientService){}
   ngOnInit()
   {
@@ -25,9 +26,9 @@ this.getPaged(this.pageIndex);
   {
     this.isLoading = true;
     this._ghService.getByPage(pageIndex)        .subscribe
-    ((res:any)=>
+    ((res:Repository)=>
     {
-      ((res.items) as any[]).forEach((v,i)=>{  
+      res.items.forEach((v,i)=>{  
         
         try
         {
@@ -40,10 +41,10 @@ this.getPaged(this.pageIndex);
     },err=>this.isLoading=false);
   }
 
-  getTimeInterval(created_at:Date):number
+  getTimeInterval(created_at):number
   {
-    let currentDate = new Date().getTime()
-    let creationDate =  ( created_at).getTime ();
+    let currentDate = new Date().getTime();
+    let creationDate =  ( new Date(created_at)).getTime ();
     let miliSecondsPerDay =   (1000 * 60 * 60 * 24);
     let diffInMiliSeconds = currentDate- creationDate;
               // i am not sure if this is the correct way to calculate time interval
