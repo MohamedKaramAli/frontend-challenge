@@ -13,7 +13,7 @@
   (scrolled)="onScroll()">
     <div class="row" *ngFor="let item of repos.items">
       <div class="col-md-3 col-sm-4" >
-          <img [src]="item.owner!=null ?item.owner.avatar_url : ''" style="width:95%;height:95%;padding:2.5%;border:solid black"/>
+          <img [src]="item.owner!=null ?item.owner.avatar_url : ''" [title]="item.owner.login" style="width:95%;height:95%;padding:2.5%;border:solid black"/>
       </div>
       <div class="col-md-9 col-sm-8" >
      <h4>{{item.name}} </h4>
@@ -22,7 +22,7 @@
     <div style="padding-top:20px">
       <div class="card"> stars: {{item.stargazers_count}}</div>
       <div class="card"> issues:{{item.open_issues}}</div>
-      <label>submitted {{item.timeInterval}} days ago by {{item.name}}</label>
+      <label>submitted {{item.timeInterval}} days ago by {{item.owner.login}}</label>
 
     </div>
 
