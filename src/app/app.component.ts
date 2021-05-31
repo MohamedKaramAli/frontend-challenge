@@ -1,54 +1,61 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { GithubClientService } from 'services/github-client.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers:[GithubClientService]
+
 })
 export class AppComponent implements OnInit {
+  pageIndex = 1;
+ isLoading:boolean=false;
   title = 'Trending Repo';
   repos:any = {items:[]};
-  constructor(private  _httpClient:HttpClient){}
+  constructor(private _ghService:GithubClientService){}
   ngOnInit()
   {
-this.getByPage(1);
+this.getPaged(this.pageIndex);
   }
 
-  pageIndex = 1;
-  getByPage( page:number)
+
+  getPaged(pageIndex)
   {
-
-        let reposUrl=    "https://api.github.com/search/repositories?q=created:>2017-10-22&sort=stars&order=desc"
-        if(page>1)
-          reposUrl += "&page="+this.pageIndex
-
-        this._httpClient.get(reposUrl)
-
-        .subscribe
-        ((res:any)=>
+    this.isLoading = true;
+    this._ghService.getByPage(pageIndex)        .subscribe
+    ((res:any)=>
+    {
+      ((res.items) as any[]).forEach((v,i)=>{  
+        
+        try
         {
-          ((res.items) as any[]).forEach((v,i)=>{  
-            let currentDate = new Date().getTime()
-            try
-            {
-              let creationDate =  (new Date(v.created_at) ).getTime ();
-              let miliSecondsPerDay =   (1000 * 60 * 60 * 24);
-              let diffInMiliSeconds = currentDate- creationDate;
-              v.timeInterval = Math.ceil(diffInMiliSeconds /  miliSecondsPerDay) ;
-              // iam not sure if this is the correct way to calculate time interval
-  
-            }catch{}
-          });
-          this.repos.items = this.repos.items.concat( res.items);
-        }
-  
-        )
-  
-      }
+          v.timeInterval = this.getTimeInterval(v.created_at)
+
+        }catch{}
+      });
+      this.repos.items = this.repos.items.concat( res.items);
+      this.isLoading = false;
+    },err=>this.isLoading=false);
+  }
+
+  getTimeInterval(created_at:Date):number
+  {
+    let currentDate = new Date().getTime()
+    let creationDate =  ( created_at).getTime ();
+    let miliSecondsPerDay =   (1000 * 60 * 60 * 24);
+    let diffInMiliSeconds = currentDate- creationDate;
+              // i am not sure if this is the correct way to calculate time interval
+          // i will assume that it is time since creation
+    return Math.ceil(diffInMiliSeconds /  miliSecondsPerDay)
+     ;
+        
+  }
+
   onScroll(){
    this.pageIndex = this.pageIndex+1;
-   this.getByPage(this.pageIndex)
+   this.getPaged(this.pageIndex);
   }
 }
 

@@ -1,26 +1,10 @@
-<style>
-  .card {
-    border-radius: 4px;
-    border: 1px solid #eee;
-    background-color: #fafafa;
-
-    width: 200px;
-    margin: 0 8px 16px;
-    padding: 5px;
-    display: inline;
-
-    justify-content: center;
-
-  }
-</style>
 
 
 
 <div class="content" role="main">
-
-  <!-- Resources -->
-  <h2>Resources</h2>
-  <p>Here are some links to help you get started:</p>
+  <div class="spinner-border text-primary block-screen" *ngIf="isLoading"   role="status">
+    <span class="sr-only" >Loading...</span>
+  </div>
 
   <div class="container"         
    infinite-scroll
@@ -28,12 +12,12 @@
   [infiniteScrollThrottle]="10"
   (scrolled)="onScroll()">
     <div class="row" *ngFor="let item of repos.items">
-      <div class="col-md-3 col-sm-4" style="background-color: green; ">
+      <div class="col-md-3 col-sm-4" >
           <img [src]="item.owner!=null ?item.owner.avatar_url : ''" style="width:95%;height:95%;padding:2.5%;border:solid black"/>
       </div>
-      <div class="col-md-9 col-sm-8" style="background-color: yellow;">
+      <div class="col-md-9 col-sm-8" >
      <h4>{{item.name}} </h4>
-    <label style="display: block;"> {{item.description}}</label>
+    <p > {{item.description}}</p>
 
     <div style="padding-top:20px">
       <div class="card"> stars: {{item.stargazers_count}}</div>
