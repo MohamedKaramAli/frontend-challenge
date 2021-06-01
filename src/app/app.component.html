@@ -6,10 +6,10 @@
     <span class="sr-only" >Loading...</span>
   </div>
 
-  <div class="container"         
+  <div class="container"
    infinite-scroll
   [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="10"
+  [infiniteScrollThrottle]="300"
   (scrolled)="onScroll()">
     <div class="row" *ngFor="let item of repos.items">
       <div class="col-md-3 col-sm-4" >
