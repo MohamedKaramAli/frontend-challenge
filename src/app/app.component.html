@@ -8,8 +8,8 @@
 
   <div class="container"
    infinite-scroll
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="300"
+  [infiniteScrollDistance]="4"
+  [infiniteScrollThrottle]="1000"
   (scrolled)="onScroll()">
     <div class="row" *ngFor="let item of repos.items">
       <div class="col-md-3 col-sm-4" >
